@@ -16,9 +16,12 @@ import (
 
 func init() {
 	// Maximize CPU utilization for parallel scanning.
-	// Use all available CPUs since this runs on a dedicated scan machine
-	// and we don't need to reserve one for system responsiveness.
-	runtime.GOMAXPROCS(runtime.NumCPU())
+	// Reserve one CPU for system responsiveness instead of using all available.
+	numCPU := runtime.NumCPU()
+	if numCPU > 1 {
+		numCPU--
+	}
+	runtime.GOMAXPROCS(numCPU)
 }
 
 func main() {
